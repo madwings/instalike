@@ -42,7 +42,7 @@ This article explains it in details - https://aws.amazon.com/blogs/compute/build
 
 ### Load Balancers
 
-A path style load balancer is a good approach here (ALB in AWS). So we have a single url to call. It is not impossible to place separate load balancers for every service\ but makes the deployment more complex. Another load balancer can be created for the external API calls. This is to make separation of concerns and security.
+A path style load balancer is a good approach here (ALB in AWS). So we have a single url to call. It is not impossible to place separate load balancers for every service but makes the deployment more complex. Another load balancer can be created for the external API calls. This is to make separation of concerns and security.
 
 ### User Service
 
@@ -63,7 +63,7 @@ They will be the main tokens used for user authentication. Its purpose will be t
 As soon as the long term tokens are invalidated, all short term tokens become invalid.
 - Long-term tokens for every user. They will be mainly for internal service operations and for creation and invalidation of the short-term tokens.
 
-The system can be implemented with TypeScript and Node.js too, probably the best choice as it will share stack with the rest. Another good option is PHP8, it is stable,\ robust and proven over time. It has all the tool for such system to be implemented easily. Go Lang could also be used but it is a bit of a overkill for such service.
+The system can be implemented with TypeScript and Node.js too, probably the best choice as it will share stack with the rest. Another good option is PHP8, it is stable, robust and proven over time. It has all the tool for such system to be implemented easily. Go Lang could also be used but it is a bit of a overkill for such service.
 
 SQL or NoSQL database will work here. The final choice will require further tests, poc and detailization of the requirements.
 Tokens will be stored for the purpose of invalidation when necessary.
@@ -74,8 +74,7 @@ This will be the service that will upload user content, images and videos (if im
 but with a storage system. Like S3 for example.
 It will implement `tus - resumable file uploads protocol` (https://tus.io/). It will be used for chunk upload of big files. Also to mitigate the problems with slow
 internet connection (user from India or Iran for example). It has good libraries for React so it will easily implemented on the Front-End.
-For the service implementation Node.js with TypeScript is not a good option. As the official implementation of the tus lib for Node.js is\
-not very well maintained. It lacks functionality and support. Go and PHP on the other hand have much better libraries.
+For the service implementation Node.js with TypeScript is not a good option. As the official implementation of the tus lib for Node.js is not very well maintained. It lacks functionality and support. Go and PHP on the other hand have much better libraries.
 
 ### Content Service
 
@@ -108,7 +107,7 @@ towards Redis when needed.
 
 Most likely a search engine will be needed. For such a service we should use some dedicated system.
 One option is in house search engine written around the Elastic Stack. This of course won't be a simple task.
-Another option is to use external service like Algolia. The benefits are that we won't need to write that in house system.
+Another option is to use external service like `Algolia`. The benefits are that we won't need to write that in house system.
 But in the long run the first solution may be the better option.
 
 ### Potential Services
