@@ -1,0 +1,14 @@
+.DS_Store
+.bin
+.circleci
+.git
+.github
+.vscode
+config/local-*.js
+coverage
+data
+db
+docker-images
+docs
+node_modules
+*.js.map

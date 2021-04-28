@@ -1,0 +1,121 @@
+{
+	"name": "limechain-poc-backend",
+	"version": "1.0.0",
+	"description": "LimeChain POC",
+	"author": "Stiliyan Ivanov",
+	"engines": {
+		"node": ">=10",
+		"yarn": "*"
+	},
+	"main": "src/app.js",
+	"scripts": {
+		"debug": "cross-env DEBUG=service-biwala:* nodemon --exec babel-node ./src/boot.js --inspect",
+		"cm": "git-cz",
+		"build": "rimraf output && mkdir output && yarn babel src -s -D -d output --ignore 'src/**/*.spec.js'",
+		"release": "release-it $(npm run emoji-bump --silent)",
+		"release:dry": "yarn releaseit --dry-run",
+		"clean": "rimraf node_modules coverage data docs",
+		"lint": "suppress-exit-code eslint .",
+		"lint:fix": "suppress-exit-code eslint --fix --fix-type layout .",
+		"lint:watch": "eslint --watch --clear",
+		"test": "jest --setupFiles dotenv/config --silent --runInBand --config .jestrc.json --coverage --colors --forceExit",
+		"test:quick": "jest --setupFiles dotenv/config --runInBand --config .jestrc.json --colors --forceExit",
+		"test:coverage": "yarn test --coverage",
+		"test:coverage:serial": "yarn test --coverage -i",
+		"test:coverage:watch": "yarn test:coverage --watch",
+		"test:coverage:watch:serial": "yarn test:coverage --watch -i",
+		"test:lint": "jest --config .jestrc.json --colors --projects lint",
+		"test:serial": "yarn test -i",
+		"test:watch": "yarn test --watch",
+		"test:watch:serial": "yarn test --watch -i",
+		"test:unit": "jest '(/__tests__/.*\\.test)\\.js$' --watch",
+		"validate": "yarn lint && yarn test",
+		"start": "cross-env DEBUG=service-limechain:* nodemon output/boot.js",
+		"start:dev": "yarn build && cross-env NODE_ENV=development yarn start",
+		"test:dev": "cross-env NODE_ENV=development yarn test",
+		"test:dev:coverage:watch": "yarn test:dev --coverage --watch",
+		"codeclimate:coverage": "cat coverage/lcov.info | codeclimate-test-reporter"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.8.4",
+		"@babel/core": "^7.9.0",
+		"@babel/node": "^7.8.7",
+		"@babel/plugin-proposal-class-properties": "^7.8.3",
+		"@babel/plugin-proposal-object-rest-spread": "^7.8.3",
+		"@babel/plugin-syntax-dynamic-import": "^7.8.3",
+		"@babel/preset-env": "^7.9.5",
+		"apidoc": "^0.25.0",
+		"aws-sdk-mock": "^5.1.0",
+		"babel-eslint": "^10.1.0",
+		"babel-jest": "26.6.3",
+		"commitizen": "^4.2.2",
+		"core-js": "^3.8.1",
+		"cross-env": "^7.0.1",
+		"eslint": "^6.8.0",
+		"eslint-config-airbnb-base": "^14.1.0",
+		"eslint-plugin-import": "^2.20.2",
+		"eslint-watch": "^6.0.1",
+		"husky": "^4.3.6",
+		"is-running": "^2.1.0",
+		"jest": "26.6.3",
+		"jest-runner-eslint": "^0.10.0",
+		"lint-staged": "^10.0.7",
+		"moment": "^2.29.1",
+		"nock": "^13.0.5",
+		"prettier": "^2.2.1",
+		"react-is": "^16.13.1",
+		"redis-mock": "0.56.3",
+		"supertest": "^6.0.1",
+		"suppress-exit-code": "^1.0.0"
+	},
+	"dependencies": {
+		"@hapi/boom": "^9.1.1",
+		"async": "^3.2.0",
+		"aws-sdk": "^2.817.0",
+		"axios": "^0.21.1",
+		"body-parser": "^1.19.0",
+		"colors": "^1.4.0",
+		"compression": "^1.7.4",
+		"config": "^3.3.1",
+		"cors": "^2.8.5",
+		"debug": "^3.1.0",
+		"dotenv": "^8.2.0",
+		"express": "^4.17.1",
+		"express-async-errors": "^3.1.1",
+		"express-routemap": "^1.6.0",
+		"express-validator": "^6.9.0",
+		"fast-fuzzy": "^1.10.8",
+		"fb": "^2.0.0",
+		"form-data": "^3.0.0",
+		"helmet": "^4.2.0",
+		"lodash": "^4.17.20",
+		"morgan": "^1.10.0",
+		"multer": "^1.4.2",
+		"nanoid": "^3.1.20",
+		"nodemon": "^2.0.2",
+		"pg-hstore": "^2.3.3",
+		"redis": "^3.0.2",
+		"regenerator-runtime": "^0.13.7",
+		"rimraf": "^3.0.2",
+		"twitter-lite": "^0.14.0",
+		"v8-compile-cache": "^2.2.0"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"lint-staged": {
+		"./src/**/*.{js,jsx,ts,tsx}": [
+			"yarn lint:fix"
+		]
+	},
+	"config": {
+		"commitizen": {
+			"path": "node_modules/cz-customizable"
+		},
+		"cz-customizable": {
+			"config": ".cz-config.js"
+		}
+	}
+}

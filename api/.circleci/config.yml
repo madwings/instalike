@@ -1,0 +1,241 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+version: 2
+
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: madwings/pp-node-ci:12.20.0
+
+      # We need a Database to test against
+      - image: circleci/mariadb:10.4.13
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
+    environment:
+      # SERVICE_X_REPO_TOKEN: "${$X_REPO_TOKEN}"
+
+    working_directory: ~/app
+
+    branches:
+      only:
+        - /feature\/.*/
+        - /release\/.*/
+        # - /bugfix\/.*/
+        # - /support\/.*/
+        - develop
+        # - /release\/.*/
+        # - /hotfix\/.*/
+        - master
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --no-cache -q --no-progress py-pip nodejs yarn make g++
+            pip install -q awscli
+
+      - run:
+          name: Setting NPM TOKEN
+          command: |
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ./.npmrc
+
+      - run:
+          name: Generating .env file
+          command: |
+            echo "Processing branch ${CIRCLE_BRANCH}"
+
+            echo "Compiling .env file for environment: ${NODE_ENV}"
+
+            cat <<EOT >> .env
+
+            AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+            AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+            AWS_REGION=$AWS_REGION
+            AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID
+
+
+            ELASTICACHE_ENDPOINT=$ELASTICACHE_ENDPOINTT
+
+            EOT
+
+            cat .env
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - dependency-cache-
+
+      - run:
+          name: Install packages
+          command: |
+            yarn install
+
+      - run:
+          name: Setup Code Climate test-reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+
+      - run:
+          name: Running tests
+          command: |
+            ./cc-test-reporter before-build
+            yarn test
+            ./cc-test-reporter after-build upload-coverage i coverage/lcov.info --exit-code $?
+
+      # Make sure we can use docker to build our container
+      - setup_remote_docker:
+          version: 19.03.13
+
+      - run:
+          name: Create container
+          command: |
+            DEPLOY=false
+            echo "CIRCLE_BRANCH $CIRCLE_BRANCH"
+            case "${CIRCLE_BRANCH}" in
+              release*)
+                export NODE_ENV=development
+                DEPLOY=true
+                ;;
+              master)
+                export NODE_ENV=production
+                DEPLOY=true
+                ;;
+              *)
+                export NODE_ENV=development
+                ;;
+            esac
+
+            echo "NODE_ENV $NODE_ENV"
+            echo "Deploying: $DEPLOY"
+
+            APP_NAME=service-limechain
+            LAUNCH_TYPE=fargate
+            DOCKER_IMAGE=$APP_NAME
+            DOCKER_TAG=latest-$NODE_ENV
+            DOCKER_IMAGE_TAG=$DOCKER_IMAGE:$DOCKER_TAG
+
+            AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+            AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+            AWS_REGION=$AWS_REGION
+            AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID
+            AWS_REPOSITORY=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/
+            AWS_IMAGE_TAG=$AWS_REPOSITORY$DOCKER_IMAGE_TAG
+
+            CLUSTER=$APP_NAME-$NODE_ENV
+            SERVICE=$APP_NAME-$LAUNCH_TYPE
+
+            TASK=$APP_NAME-$NODE_ENV
+            FAMILY=$APP_NAME-$NODE_ENV
+            NAME=$APP_NAME-$NODE_ENV
+
+            VERSION=$DOCKER_TAG
+
+            yarn install --production=false
+
+            if [[ "$DEPLOY" == "true" ]]; then
+              # Build the application
+              yarn build
+
+              # Build the container
+              docker build --build-arg NODE_ENV=$NODE_ENV --build-arg NPM_TOKEN=$NPM_TOKEN -t $DOCKER_IMAGE .
+
+              # Tag the image
+              docker tag $DOCKER_IMAGE $AWS_IMAGE_TAG
+
+              # Deploy the application to AWS
+              aws configure set default.region $AWS_REGION
+              eval $(aws ecr get-login --no-include-email --region $AWS_REGION)
+
+              docker push $AWS_IMAGE_TAG
+
+              # Create task for docker deploy
+              task_template='[{
+                "name": "%s",
+                "image": "%s",
+                "essential": true,
+                "memory": 512,
+                "cpu": 256,
+                "logConfiguration": {
+                  "logDriver": "awslogs",
+                  "options": {
+                    "awslogs-group": "/ecs/service-limechain-%s",
+                    "awslogs-region": "us-west-2",
+                    "awslogs-stream-prefix": "ecs"
+                  }
+                },
+                "portMappings": [{
+                  "hostPort": 8080,
+                  "protocol": "tcp",
+                  "containerPort": 8080
+
+                }],
+                "environment" : [{
+                  "name": "NODE_ENV",
+                  "value" : "%s"
+                }]
+              }]'
+              echo "$task_template"
+
+              task_def=$(printf "$task_template" $NAME $AWS_IMAGE_TAG $NODE_ENV $NODE_ENV)
+              echo "$task_def"
+
+              # Register task definition
+              json=$(aws ecs register-task-definition --container-definitions "$task_def" --family "$FAMILY" --requires-compatibilities "FARGATE" --network-mode "awsvpc" --memory 512 --cpu 256 --execution-role-arn "arn:aws:iam::963931388464:role/ecsTaskExecutionRole")
+              echo "$json"
+
+              # Grab revision # using regular bash and grep
+              revision=$(echo "$json" | grep -o '"revision": [0-9]*' | grep -Eo '[0-9]+')
+              echo "$revision"
+
+              # Deploy revision
+              # aws ecs update-service --cluster $CLUSTER --service $SERVICE --task-definition $FAMILY:$revision
+
+              # Create or update the service with the latest task definition
+              if aws ecs update-service --cluster $CLUSTER --service $SERVICE  | grep -q "serviceArn"
+              then
+                  aws ecs update-service \
+                      --cluster $CLUSTER \
+                      --service $SERVICE \
+                      --task-definition $FAMILY:$revision \
+                      --desired-count 1
+              else
+                  aws ecs create-service \
+                      --cluster $CLUSTER \
+                      --service-name $SERVICE \
+                      --task-definition $FAMILY:$revision \
+                      --network-configuration "awsvpcConfiguration={subnets=[subnet-7c085005],securityGroups=[sg-0a6b337fb67e44439]}" \
+                      --launch-type "FARGATE" \
+                      --desired-count 1
+              fi
+            fi
+
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+
+      - store_artifacts:
+          path: coverage
+
+      # and store coverage report
+      - store_test_results:
+          path: coverage
+      # If we had
+      #- run:
+      #    name: Run mongo db
+      #    command: <|
+      #      docker run --name mongo_test -d mongo
+      #- run:
+      #    name: Run tests
+      #    command: <|
+      #      docker run -a STDOUT -it -p 4100:3000 --link mongo_test:db --name test_app app gulp test
+      #      #docker exec -t test_app gulp test

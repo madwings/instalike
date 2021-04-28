@@ -1,0 +1,39 @@
+{
+	"collectCoverageFrom": [
+		"**/src/**",
+		"**/lib/**",
+		"!**/node_modules/**",
+		"!**/src/boot.js",
+		"!**/src/controllers/compat/**",
+		"!**/src/lib/mysql-client.js",
+		"!**/src/lib/transaction.js",
+		"!**/*.js.snap"
+	],
+	"coveragePathIgnorePatterns": [
+		"<rootDir>/dist/",
+		"<rootDir>/node_modules/",
+		"<rootDir>/templates/",
+		"<rootDir>/output/"
+	],
+	"coverageReporters": ["json", "lcov", "text", "html"],
+	"globals": {
+		"DEBUG": "service-content:*"
+	},
+	"moduleDirectories": ["node_modules", "test"],
+	"notify": true,
+	"testEnvironment": "node",
+	"testMatch": ["<rootDir>/test/**/*.spec.js?(x)"],
+	"testPathIgnorePatterns": [
+		"<rootDir>/config/",
+		"<rootDir>/dist/",
+		"<rootDir>/output/",
+		"<rootDir>/node_modules/"
+	],
+	"verbose": true,
+	"watchPathIgnorePatterns": [
+		"<rootDir>/dist/",
+		"<rootDir>/output/",
+		"<rootDir>/node_modules/"
+	],
+	"testURL": "http://localhost/"
+}

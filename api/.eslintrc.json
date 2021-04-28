@@ -1,0 +1,76 @@
+{
+	"parser": "babel-eslint",
+	"parserOptions": {},
+	"extends": [
+		"airbnb-base"
+	],
+	"rules": {
+		"indent": [
+			"error",
+			"tab",
+			{
+				"MemberExpression": 1,
+				"SwitchCase": 1
+			}
+		],
+		"max-len": [
+			"error",
+			{
+				"code": 140
+			}
+		],
+		"comma-dangle": [
+			"error",
+			"never"
+		],
+		"no-plusplus": [
+			"error",
+			{
+				"allowForLoopAfterthoughts": true
+			}
+		],
+		"object-curly-newline": [
+			"error",
+			{
+				"consistent": true
+			}
+		],
+		"function-paren-newline": [
+			"error",
+			"consistent"
+		],
+		"array-bracket-newline": [
+			"error",
+			"consistent"
+		],
+		"quotes": [
+			"error",
+			"single"
+		],
+		"semi": [
+			"error",
+			"always"
+		],
+		"operator-linebreak": "off",
+		"prefer-destructuring": "off",
+		"prefer-object-spread": "off",
+		"import/order": "off",
+		"import/prefer-default-export": "off",
+		"no-tabs": "off",
+		"arrow-parens": "off",
+		"no-unused-vars": [
+			"error",
+			{
+				"varsIgnorePattern": "debug|error|config"
+			}
+		],
+		"camelcase": "off",
+		"import/no-extraneous-dependencies": "off",
+		"import/no-unresolved": "off",
+		"no-restricted-syntax": "off"
+	},
+	"env": {
+		"es6": true,
+		"jest": true
+	}
+}
