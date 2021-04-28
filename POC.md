@@ -18,9 +18,9 @@ It could also be disabled after a period of time if it exists at all, as user ma
 I have used the Blockchain Data API - https://www.blockchain.com/api/blockchain_api as source of data for the real time update.
 Yes it is not a feed of images but it works fine to show the concept.
 
-For the test first start the Back-End then the Front-End
+For the test first start the Backend then the Frontend
 
-## Front-End
+## Frontend
 
 Located inside `./frontend` folder. Very simple React app, bootstrapped with [Create React App]\
 
@@ -32,7 +32,7 @@ Start with:
 
 `yarn start`
 
-## Back-End (API)
+## Backend (API)
 
 Located inside `./api` folder. Based on `Express.js`
 

@@ -5,7 +5,7 @@ For most of the examples I will be working with AWS, as I have most experience w
 ## DNS and Proxy
 
 For DNS and Proxy we could use Cloudflare, pretty much a standard these days. Most likely CloudFront will be used is some cases.
-In front-end deployment and access to the S3 buckets from an URL under the main domain.
+In frontend deployment and access to the S3 buckets from an URL under the main domain.
 
 ## Frontend
 
@@ -27,9 +27,9 @@ Language to be used - TypeScript
 
 ### Deployment
 
-The mobile app obviously will be placed in App Store and Play Store so people can install ir on their mobile devices.
+The mobile app obviously will be placed in App Store and Play Store so people can install it on their mobile devices.
 
-The web app can be deployed in AWS in a S3 bucket with the following configurations. Of course any other hosting will work. Most of my experience is with AWS.
+The web app can be deployed in AWS in a S3 bucket with the following configurations. Of course any other hosting will work.
 - Simple S3 deployment with public bucket and direct access to the bucket, the worst deployment option.
 - CloudFront -> S3 so we use the caching provided and isolate the bucket from access outside CloudFront.
 - Cloudflare -> CloudFront -> S3, even more of the above, as Cloudflare has some great features.
@@ -46,8 +46,8 @@ A path style load balancer is a good approach here (ALB in AWS). So we have a si
 
 ### User Service
 
-It will contain CRUD endpoints for user profiles. Despite the fact it will be at the core of the system and it will be heavily loaded. It can be written with\
-TypeScript and Node.js. It will be sufficient enough and it will share technology stack with the Front-End.
+It will contain CRUD endpoints for user profiles. Despite the fact it will be at the core of the system and it will be heavily loaded.
+It can be written with TypeScript and Node.js. It will be sufficient enough and it will share technology stack with the Ffrontend.
 
 SQL style database is sufficient here. A cluster capabilities will be required, like the MariaDB Gallera Cluster.
 The exact choice depends mainly on the budget and further detailization of the requirements.
@@ -72,24 +72,22 @@ Tokens will be stored for the purpose of invalidation when necessary.
 
 This will be the service that will upload user content, images and videos (if implemented one day). The system won't work with a database,\
 but with a storage system. Like S3 for example.
-It will implement `tus - resumable file uploads protocol` (https://tus.io/). It will be used for chunk upload of big files. Also to mitigate the problems with slow
-internet connection (user from India or Iran for example). It has good libraries for React so it will easily implemented on the Front-End.
+It will implement `tus - resumable file uploads protocol` (https://tus.io/). It will be used for chunk upload of big files. Also to mitigate problems with slow
+internet connection (user from India or Iran for example). It has good libraries for React so it will easily implemented on the frontend.
 For the service implementation Node.js with TypeScript is not a good option. As the official implementation of the tus lib for Node.js is not very well maintained. It lacks functionality and support. Go and PHP on the other hand have much better libraries.
 
 ### Content Service
 
 This will be the most loaded service as it will contain the CRUD endpoints for all the media (images and probably videos in the future).
 It will call the `Media Processing` system to manipulate the already uploaded media to S3.
-It will store all the content (urls no binary files of course, both databases are not good for binary) inside NoSQL database due to the nature of the data stored. Very good candidates are MongoDB and Cassandra.
-Probably my choice will be the later one - Cassandra, as it is build to work in distributed environment, with scalability and high availability in mind without compromising performance. Processing could be done in sync or async way. For example creating a single image could be in a sync way as the processing will be fast.
-Multi photo uploads or video uploads will be in async fashion due to the longer processing. So the front-end will be notified in push notification manner through WebSocket connection, Push Web API or long polling with AJAX.
-The data will be cached in two layers of cache - first level Redis, second level Aerospike. So we reduce the readings directly from the main database.
-Having in mind the load and the request it will be handling, performance will be crucial. So a very good candidate is Go Lang.
+It will store all the content (urls no binary files of course, both databases are not good for binaries) inside NoSQL database due to the nature of the data stored. Very good candidates are MongoDB and Cassandra.
+Probably my choice will be the later one - Cassandra, as it is build to work in distributed environment, with scalability and high availability in mind without compromising performance. Processing could be done in sync or async way. For example creating a single image could be in a sync way as the processing will be fast. Multi-photo uploads or video uploads will be in async fashion due to the longer processing. So the frontend will be notified in push notification manner through WebSocket connection, Push Web API or long polling with AJAX. The data will be cached in two layers of cache - first level Redis, second level Aerospike. So we reduce the readings directly from the main database. Having in mind the load and the request it will be handling, performance will be crucial. So a very good candidate is Go Lang.
 
 ### Media Processing
 
 Processes media, images and probably videos - resize, crop, rotate, transcode etc..
 It could be written in TypeScript with Node.js. As it has very good integration with ffmpeg, fast and quality libraries like Sharp for image processing.
+External services could also be considered.
 
 ### Preloader/Caching Service
 
@@ -97,7 +95,7 @@ This service will be doing the preloading and caching of media data in the two l
 The best will be to be integrated with the same technology as the `Content Service` so a code could be shared.
 The caching itself can be done in two ways. With direct communications with the `Content Service` where caching endpoints will be created.
 The other approach is sharing model definitions and functionalities as packages.
-Why two levels of cache? Redis is very fast but it has lacks functionalities and it is also expensive.
+Why two levels of cache? Redis is very fast but it lacks functionalities and it is also expensive.
 So only the critical and most recent data will be there. Aerospike on the other hand is slower than Redis but faster than Cassandra or MongoDB\
 as it is optimized for SSD operations. So it could store daily data for example.
 In the context of the task the public feed could be cached in Redis. Feeds of users active in the last day could be cached in the Aerospike and moved
@@ -106,7 +104,7 @@ towards Redis when needed.
 ### Search Engines
 
 Most likely a search engine will be needed. For such a service we should use some dedicated system.
-One option is in house search engine written around the Elastic Stack. This of course won't be a simple task.
+One option is in house search engine written around the `Elastic Stack`. This of course won't be a simple task.
 Another option is to use external service like `Algolia`. The benefits are that we won't need to write that in house system.
 But in the long run the first solution may be the better option.
 
