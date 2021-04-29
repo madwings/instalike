@@ -1,4 +1,4 @@
-# LimeChain Instagram like Service
+# LimeChain Instagram-like Service
 
 I have created three documents that outline the design, architecture and POC.
 

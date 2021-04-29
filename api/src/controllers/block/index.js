@@ -16,13 +16,14 @@ const get_list = async (req, res) => {
 	const cache_key = `${config.caching.blocks_key}_${key}`;
 	let result = await caching.get(cache_key);
 	if (result) {
-		debug('Cache');
+		debug('Get Cache');
 		return res.json(result);
 	}
 
 	const response = await axios.get(`${config.blocks_endpoint}`);
 
 	if (response.data.blocks[key]) {
+		debug('Set Result and Cache');
 		result = response.data.blocks[key];
 		caching.set(cache_key, result, config.caching.blocks_ttl);
 	}

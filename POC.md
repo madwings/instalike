@@ -1,6 +1,6 @@
-# LimeChain Instagram like Service - Proof of Concept
+# LimeChain Instagram-like Service - Proof of Concept
 
-POC is written in JavaScript with the help of Node.js 12x.
+POC is written in JavaScript with the help of Node.js 12x and Yarn.
 
 Here you will ask why in JavaScript as everywhere in the design I recommend using its superset - TypeScript.
 The answer is simple. First, JavaScript needs less tooling which makes it perfect for the POC. Second, I have got more samples
@@ -22,7 +22,7 @@ For the test first start the Backend then the Frontend
 
 ## Frontend
 
-Located inside `./frontend` folder. Very simple React app, bootstrapped with [Create React App]\
+Located inside `./frontend` folder. Very simple React app, bootstrapped with [Create React App]
 
 Install the dependencies with:
 
