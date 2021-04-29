@@ -95,7 +95,7 @@ The best will be to be integrated with the same technology as the `Content Servi
 The caching itself can be done in two ways. With direct communications with the `Content Service` where caching endpoints will be created.
 The other approach is sharing model definitions and functionalities as packages.
 Why two levels of cache? Redis is very fast but it lacks functionalities and it is also expensive.
-So only the critical and most recent data will be there. Aerospike on the other hand is slower than Redis but faster than Cassandra or MongoDB\
+So only the critical and most recent data will be there. Aerospike on the other hand is slower than Redis but faster than Cassandra or MongoDB
 as it is optimized for SSD operations. So it could store daily data for example.
 In the context of the task the public feed could be cached in Redis. Feeds of users active in the last day could be cached in the Aerospike and moved
 towards Redis when needed.
