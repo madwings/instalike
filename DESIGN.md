@@ -90,7 +90,7 @@ External services could also be considered.
 
 ### Preloader/Caching Service
 
-This service will be doing the preloading and caching of media data in the two levels of cache for the `Content Service`.
+This service will be doing the preloading and caching of media data, in the two levels of cache for the `Content Service`, from the main database.
 The best will be to be integrated with the same technology as the `Content Service` so a code could be shared.
 The caching itself can be done in two ways. With direct communications with the `Content Service` where caching endpoints will be created.
 The other approach is sharing model definitions and functionalities as packages.
