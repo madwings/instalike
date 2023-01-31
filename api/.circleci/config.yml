@@ -117,7 +117,7 @@ jobs:
             echo "NODE_ENV $NODE_ENV"
             echo "Deploying: $DEPLOY"
 
-            APP_NAME=service-limechain
+            APP_NAME=service-instalike
             LAUNCH_TYPE=fargate
             DOCKER_IMAGE=$APP_NAME
             DOCKER_TAG=latest-$NODE_ENV
@@ -167,7 +167,7 @@ jobs:
                 "logConfiguration": {
                   "logDriver": "awslogs",
                   "options": {
-                    "awslogs-group": "/ecs/service-limechain-%s",
+                    "awslogs-group": "/ecs/service-instalike-%s",
                     "awslogs-region": "us-west-2",
                     "awslogs-stream-prefix": "ecs"
                   }
