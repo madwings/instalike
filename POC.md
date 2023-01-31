@@ -1,4 +1,4 @@
-# LimeChain Instagram-like Service - Proof of Concept
+# Instagram-like Service - Proof of Concept
 
 POC is written in JavaScript with the help of Node.js 12x and Yarn.
 

@@ -3,7 +3,7 @@ import config from 'config';
 import axios from 'axios';
 import caching from '../../lib/caching';
 
-const debug = Debug('service-limechain:controllers:feeds');
+const debug = Debug('service-instalike:controllers:feeds');
 
 const get_list = async (req, res) => {
 	debug('Getting list of blocks');

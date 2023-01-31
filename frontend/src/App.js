@@ -20,7 +20,7 @@ function Blocks() {
     return (
         <Container maxWidth='md'>
             <header className='header'>
-                <h1>LimeChain real time updating POC</h1>
+                <h1>Instalike real time updating POC</h1>
             </header>
             <BlockList />
         </Container>

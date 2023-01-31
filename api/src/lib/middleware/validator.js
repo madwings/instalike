@@ -2,7 +2,7 @@ import Debug from 'debug';
 import boom from '@hapi/boom';
 import { check, validationResult } from 'express-validator';
 
-const debug = Debug('service-limechain:lib:middleware:validator');
+const debug = Debug('service-instalike:lib:middleware:validator');
 
 const areRequired = params => {
 	debug('areRequired params', params);

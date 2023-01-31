@@ -1,4 +1,4 @@
-# LimeChain Instagram-like Service - Design
+# Instagram-like Service - Design
 
 For most of the examples I will be working with AWS, as I have most experience with it.
 

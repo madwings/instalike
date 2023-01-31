@@ -3,8 +3,8 @@ import Debug from 'debug';
 import * as config from 'config';
 import util from 'util';
 
-const debug = Debug('service-limechain:lib:caching');
-const error = Debug('service-limechain:error:lib:caching');
+const debug = Debug('service-instalike:lib:caching');
+const error = Debug('service-instalike:error:lib:caching');
 const redis =
 	config.env === 'test'
 		? require('redis-mock')

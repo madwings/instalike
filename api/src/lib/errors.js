@@ -1,8 +1,8 @@
 import Debug from 'debug';
 import boom from '@hapi/boom';
 
-const debug = Debug('service-limechain:lib:errors');
-const error = Debug('service-limechain:error:errmiddleware');
+const debug = Debug('service-instalike:lib:errors');
+const error = Debug('service-instalike:error:errmiddleware');
 
 // catch 404 and forward to error handler
 const notFound = (req, res, next) => {

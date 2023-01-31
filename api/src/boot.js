@@ -7,8 +7,8 @@ import http from 'http';
 
 import app from './app';
 
-const debug = Debug('service-limechain:boot');
-const error = Debug('service-limechain:error:boot');
+const debug = Debug('service-instalike:boot');
+const error = Debug('service-instalike:error:boot');
 const v8 = require('v8');
 require('v8-compile-cache');
 

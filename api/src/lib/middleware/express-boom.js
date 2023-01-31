@@ -1,7 +1,7 @@
 import Debug from 'debug';
 import boom from '@hapi/boom';
 
-const debug = Debug('service-limechain:lib:middleware:express-boom');
+const debug = Debug('service-instalike:lib:middleware:express-boom');
 
 const checkExistence = (req, res, next) => {
 	if (res.boom) {

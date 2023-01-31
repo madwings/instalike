@@ -1,6 +1,6 @@
 import Debug from 'debug';
 
-const debug = Debug('service-limechain:controllers:health');
+const debug = Debug('service-instalike:controllers:health');
 
 const root = (req, res) => {
 	res.json({ root: true });
