@@ -1,6 +1,6 @@
 # Instagram-like Service
 
-I have created three documents that outline the design, architecture and POC.
+Тhree documents outline the design, architecture and POC of the service.
 
 1. The architecture with all the graphics of the system is in [architecture.svg](architecture.svg)
 2. The architecture is explained in [DESIGN.md](DESIGN.md)
